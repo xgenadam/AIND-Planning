@@ -9,6 +9,8 @@ from lp_utils import (
 )
 from my_planning_graph import PlanningGraph
 
+from utils import load_factory
+
 from functools import lru_cache
 
 
@@ -61,6 +63,12 @@ class AirCargoProblem(Problem):
             """
             loads = []
             # TODO create all load ground actions from the domain Load action
+            for airport in self.airports:
+                for plane in self.planes:
+                    for cargo in self.cargos:
+                        loads.append(
+                            load_factory(airport, plane, cargo)
+                        )
             return loads
 
         def unload_actions():
