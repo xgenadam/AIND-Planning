@@ -3,6 +3,7 @@ from aimacode.planning import Action
 from aimacode.search import (
     Node, Problem,
 )
+from aimacode.search import greedy_best_first_graph_search
 from aimacode.utils import expr
 from lp_utils import (
     FluentState, encode_state, decode_state,
@@ -181,9 +182,13 @@ class AirCargoProblem(Problem):
         for action in action_list:
             action.precond_neg = []
             action.precond_pos = []
+            action.effect_rem = []
 
+        frontier = []
 
-        return count
+        greedy_best_first_graph_search(self, frontier)
+
+        return len(frontier)
 
 
 def air_cargo_p1() -> AirCargoProblem:
