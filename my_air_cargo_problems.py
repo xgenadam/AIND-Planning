@@ -9,8 +9,9 @@ from lp_utils import (
 )
 from my_planning_graph import PlanningGraph
 
-from utils import load_factory
+from utils import AirCargoFactory
 
+from copy import deepcopy
 from functools import lru_cache
 
 
@@ -62,12 +63,14 @@ class AirCargoProblem(Problem):
             :return: list of Action objects
             """
             loads = []
-            # TODO create all load ground actions from the domain Load action
             for airport in self.airports:
                 for plane in self.planes:
                     for cargo in self.cargos:
                         loads.append(
-                            load_factory(airport, plane, cargo)
+                            AirCargoFactory.load_action_factory(
+                                airport,
+                                plane,
+                                cargo)
                         )
             return loads
 
@@ -77,7 +80,15 @@ class AirCargoProblem(Problem):
             :return: list of Action objects
             """
             unloads = []
-            # TODO create all Unload ground actions from the domain Unload action
+            for airport in self.airports:
+                for plane in self.planes:
+                    for cargo in self.cargos:
+                        unloads.append(
+                            AirCargoFactory.unload_action_factory(
+                                airport,
+                                plane,
+                                cargo)
+                        )
             return unloads
 
         def fly_actions():
@@ -86,19 +97,18 @@ class AirCargoProblem(Problem):
             :return: list of Action objects
             """
             flys = []
-            for fr in self.airports:
-                for to in self.airports:
-                    if fr != to:
-                        for p in self.planes:
-                            precond_pos = [expr("At({}, {})".format(p, fr)),
-                                           ]
-                            precond_neg = []
-                            effect_add = [expr("At({}, {})".format(p, to))]
-                            effect_rem = [expr("At({}, {})".format(p, fr))]
-                            fly = Action(expr("Fly({}, {}, {})".format(p, fr, to)),
-                                         [precond_pos, precond_neg],
-                                         [effect_add, effect_rem])
-                            flys.append(fly)
+            for airport_from in self.airports:
+                for airport_to in self.airports:
+                    if airport_from != airport_to:
+                        for plane in self.planes:
+                            flys.append(
+                                AirCargoFactory.fly_action_factory(
+                                    plane,
+                                    airport_from,
+                                    airport_to
+                                )
+                            )
+
             return flys
 
         return load_actions() + unload_actions() + fly_actions()
@@ -159,7 +169,7 @@ class AirCargoProblem(Problem):
         return pg_levelsum
 
     @lru_cache(maxsize=8192)
-    def h_ignore_preconditions(self, node: Node):
+    def h_ignore_preconditions(self, node: Node) -> int:
         """This heuristic estimates the minimum number of actions that must be
         carried out from the current state in order to satisfy all of the goal
         conditions by ignoring the preconditions required for an action to be
@@ -167,6 +177,12 @@ class AirCargoProblem(Problem):
         """
         # TODO implement (see Russell-Norvig Ed-3 10.2.3  or Russell-Norvig Ed-2 11.2)
         count = 0
+        action_list = deepcopy(self.actions_list)
+        for action in action_list:
+            action.precond_neg = []
+            action.precond_pos = []
+
+
         return count
 
 
