@@ -178,17 +178,16 @@ class AirCargoProblem(Problem):
         """
         # TODO implement (see Russell-Norvig Ed-3 10.2.3  or Russell-Norvig Ed-2 11.2)
         count = 0
-        action_list = deepcopy(self.actions_list)
-        for action in action_list:
-            action.precond_neg = []
-            action.precond_pos = []
-            action.effect_rem = []
 
-        frontier = []
+        # similar to goal test here, but rather than returning false when a goal is not satisfied
+        # we count the number of unsatisfied goals
+        kb = PropKB()
+        kb.tell(decode_state(node.state, self.state_map).pos_sentence())
+        for clause in self.goal:
+            if clause not in kb.clauses:
+                count += 1
 
-        greedy_best_first_graph_search(self, frontier)
-
-        return len(frontier)
+        return count
 
 
 def air_cargo_p1() -> AirCargoProblem:
