@@ -2,6 +2,20 @@ from aimacode.planning import Action
 from aimacode.utils import expr
 
 
+class ModifiedAction(Action):
+
+    def is_valid(self, kb):
+        for clause in self.precond_pos:
+            if clause not in kb.clauses:
+                return False
+
+        for clause in self.precond_neg:
+            if clause in kb.clauses:
+                return False
+
+        return True
+
+
 class AirCargoFactory(object):
 
     @staticmethod
@@ -39,7 +53,6 @@ class AirCargoFactory(object):
         precond_pos = [
             cls.at_state(cargo, airport),
             cls.at_state(plane, airport),
-            *cls.core_states(airport, plane, cargo)
         ]
 
         precond_neg = []
@@ -52,9 +65,7 @@ class AirCargoFactory(object):
             cls.at_state(cargo, airport)
         ]
 
-        return Action(action=action,
-                      precond=[precond_pos, precond_neg],
-                      effect=[effect_add, effect_rem])
+        return cls.generate_action(action, precond_pos, precond_neg, effect_add, effect_rem)
 
     @classmethod
     def unload_action_factory(cls, airport, plane, cargo):
@@ -63,7 +74,6 @@ class AirCargoFactory(object):
         precond_pos = [
             cls.in_state(cargo, plane),
             cls.at_state(plane, airport),
-            *cls.core_states(airport, plane, cargo)
         ]
 
         precond_neg = []
@@ -76,9 +86,7 @@ class AirCargoFactory(object):
             cls.in_state(cargo, plane)
         ]
 
-        return Action(action=action,
-                      precond=[precond_pos, precond_neg],
-                      effect=[effect_add, effect_rem])
+        return cls.generate_action(action, precond_pos, precond_neg, effect_add, effect_rem)
 
     @classmethod
     def fly_action_factory(cls, plane, airport_from, airport_to):
@@ -86,9 +94,6 @@ class AirCargoFactory(object):
 
         precond_pos = [
             cls.at_state(plane, airport_from),
-            cls.plane_state(plane),
-            cls.airport_state(airport_from),
-            cls.airport_state(airport_to)
         ]
 
         precond_neg = []
@@ -101,6 +106,10 @@ class AirCargoFactory(object):
             cls.at_state(plane, airport_from)
         ]
 
-        return Action(action=action,
-                      precond=[precond_pos, precond_neg],
-                      effect=[effect_add, effect_rem])
+        return cls.generate_action(action, precond_pos, precond_neg, effect_add, effect_rem)
+
+    @staticmethod
+    def generate_action(action, precond_pos, precond_neg, effect_add, effect_rem):
+        return ModifiedAction(action=action,
+                              precond=[precond_pos, precond_neg],
+                              effect=[effect_add, effect_rem])

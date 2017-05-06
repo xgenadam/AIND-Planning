@@ -12,7 +12,6 @@ from my_planning_graph import PlanningGraph
 
 from utils import AirCargoFactory
 
-from copy import deepcopy
 from functools import lru_cache
 
 
@@ -52,7 +51,7 @@ class AirCargoProblem(Problem):
             list of Action objects
         """
 
-        # TODO create concrete Action objects based on the domain action schema for: Load, Unload, and Fly
+        # create concrete Action objects based on the domain action schema for: Load, Unload, and Fly
         # concrete actions definition: specific literal action that does not include variables as with the schema
         # for example, the action schema 'Load(c, p, a)' can represent the concrete actions 'Load(C1, P1, SFO)'
         # or 'Load(C2, P2, JFK)'.  The actions for the planning problem must be concrete because the problems in
@@ -122,21 +121,40 @@ class AirCargoProblem(Problem):
             e.g. 'FTTTFF'
         :return: list of Action objects
         """
-        # TODO implement
         possible_actions = []
+
+        kb = self.get_kb(state)
+
+        for action in self.actions_list:
+            if action.is_valid(kb) is True:
+                possible_actions.append(action)
         return possible_actions
 
-    def result(self, state: str, action: Action):
+    def result(self, fluent: str, action: Action):
         """ Return the state that results from executing the given
         action in the given state. The action must be one of
         self.actions(state).
 
-        :param state: state entering node
+        :param fluent: state entering node
         :param action: Action applied
         :return: resulting state after action
         """
-        # TODO implement
-        new_state = FluentState([], [])
+        current_state = decode_state(fluent, self.state_map)
+        pos_list = []
+        neg_list = []
+
+        for fluent in current_state.pos:
+            if fluent not in action.effect_rem:
+                pos_list.append(fluent)
+
+        for fluent in current_state.neg:
+            if fluent not in action.effect_add:
+                neg_list.append(fluent)
+
+        pos_list = list(set(pos_list + action.effect_add))
+        neg_list = list(set(neg_list + action.effect_rem))
+
+        new_state = FluentState(pos_list, neg_list)
         return encode_state(new_state, self.state_map)
 
     def goal_test(self, state: str) -> bool:
@@ -176,18 +194,22 @@ class AirCargoProblem(Problem):
         conditions by ignoring the preconditions required for an action to be
         executed.
         """
-        # TODO implement (see Russell-Norvig Ed-3 10.2.3  or Russell-Norvig Ed-2 11.2)
         count = 0
-
         # similar to goal test here, but rather than returning false when a goal is not satisfied
         # we count the number of unsatisfied goals
-        kb = PropKB()
-        kb.tell(decode_state(node.state, self.state_map).pos_sentence())
+
+        kb = self.get_kb(node.state)
         for clause in self.goal:
             if clause not in kb.clauses:
                 count += 1
 
         return count
+
+    def get_kb(self, state):
+        kb = PropKB()
+        kb.tell(decode_state(state, self.state_map).pos_sentence())
+
+        return kb
 
 
 def air_cargo_p1() -> AirCargoProblem:
