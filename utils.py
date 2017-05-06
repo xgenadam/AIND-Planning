@@ -1,6 +1,7 @@
 from aimacode.planning import Action
 from aimacode.utils import expr
 
+from lp_utils import FluentState
 
 class ModifiedAction(Action):
 
@@ -113,3 +114,27 @@ class AirCargoFactory(object):
         return ModifiedAction(action=action,
                               precond=[precond_pos, precond_neg],
                               effect=[effect_add, effect_rem])
+
+    @staticmethod
+    def problem_factory(cargos, planes, airports, pos, goal):
+        from my_air_cargo_problems import AirCargoProblem
+        neg = []
+        for cargo in cargos:
+            for plane in planes:
+                state = AirCargoFactory.in_state(cargo, plane)
+                if state not in pos:
+                    neg.append(state)
+
+            for airport in airports:
+                state = AirCargoFactory.at_state(cargo, airport)
+                if state not in pos:
+                    neg.append(state)
+
+        for plane in planes:
+            for airport in airports:
+                state = AirCargoFactory.at_state(plane, airport)
+                if state not in pos:
+                    neg.append(state)
+
+        init = FluentState(pos, neg)
+        return AirCargoProblem(cargos, planes, airports, init, goal)
