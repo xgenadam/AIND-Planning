@@ -133,7 +133,7 @@ class AirCargoProblem(Problem):
     def result(self, fluent: str, action: Action):
         """ Return the state that results from executing the given
         action in the given state. The action must be one of
-        self.actions(state).
+        self.actions(state).BF
 
         :param fluent: state entering node
         :param action: Action applied
@@ -246,17 +246,15 @@ def air_cargo_p2() -> AirCargoProblem:
            expr('At(C3, ATL)'),
            expr('At(P1, SFO)'),
            expr('At(P2, JFK)'),
-           expr('At(P3, ATL)'),
-           ]
+           expr('At(P3, ATL)')]
+
     goal = [expr('At(C1, JFK)'),
             expr('At(C2, SFO)'),
-            expr('At(C3, SFO)')
-            ]
+            expr('At(C3, SFO)')]
     return AirCargoFactory.problem_factory(cargos, planes, airports, pos, goal)
 
 
 def air_cargo_p3() -> AirCargoProblem:
-    # TODO implement Problem 3 definition
     cargos = ['C1', 'C2', 'C3', 'C4']
     planes = ['P1', 'P2']
     airports = ['JFK', 'SFO', 'ATL', 'ORD']
@@ -265,11 +263,11 @@ def air_cargo_p3() -> AirCargoProblem:
            expr('At(C3, ATL)'),
            expr('At(C4, ORD)'),
            expr('At(P1, SFO)'),
-           expr('At(P2, JFK)'),
-           ]
+           expr('At(P2, JFK)')]
+
     goal = [expr('At(C1, JFK)'),
             expr('At(C2, SFO)'),
             expr('At(C3, JFK)'),
-            expr('At(C4, SFO)')
-            ]
+            expr('At(C4, SFO)')]
+
     return AirCargoFactory.problem_factory(cargos, planes, airports, pos, goal)

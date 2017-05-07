@@ -3,7 +3,8 @@ from aimacode.utils import expr
 
 from lp_utils import FluentState
 
-class ModifiedAction(Action):
+
+class ConcreteAction(Action):
 
     def is_valid(self, kb):
         for clause in self.precond_pos:
@@ -111,7 +112,7 @@ class AirCargoFactory(object):
 
     @staticmethod
     def generate_action(action, precond_pos, precond_neg, effect_add, effect_rem):
-        return ModifiedAction(action=action,
+        return ConcreteAction(action=action,
                               precond=[precond_pos, precond_neg],
                               effect=[effect_add, effect_rem])
 
