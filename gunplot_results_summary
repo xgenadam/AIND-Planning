@@ -1,0 +1,127 @@
+set term png
+
+set output "uninformed_results_summary.png"
+
+set boxwidth 0.5
+
+set style fill solid
+
+plot "uninformed_results_summary.csv" with boxes
+
+set datafile separator ","
+
+
+
+set term png
+
+set output "uninformed_results_summary.png"
+
+set boxwidth 0.5
+
+set style fill solid
+
+plot "uninformed_results_summary.csv"
+
+
+
+algorithm p1_expansions        p1_expansions   p1_goal_tests   p1_new_nodes  p2_expansions   p2_goal_tests   p2_new_nodes   p3_expansions   p3_goal_tests   p3_new_nodes
+breadth_first_search                43                56            180            3343          4609            30509           14663          18098         129631
+breadth_first_tree_search          1458              1459          5960              0             0               0               0              0              0
+depth_first_graph_search            12                13            48              582           583             5211            627            628           5176
+depth_limited_search               101               271            414            222719       2053741         2054119            0              0              0
+uniform_cost_search                 55                57            224             4689          4691           42590           17665       17667       154975
+
+
+algorithm p1_expansions,p1_expansions,p1_goal_tests,p1_new_nodes,p2_expansions,p2_goal_tests,p2_new_nodes,p3_expansions,p3_goal_tests,p3_new_nodes
+breadth_first_search,43,56,180,3343,4609,30509,14663,18098,ZZ129631
+breadth_first_tree_search,1458,1459,5960,0,0,0,0,0,0
+depth_first_graph_search,12,13,48,582,583,5211,627,628,5176
+depth_limited_search,101,271,414,222719,2053741,2054119,0,0,0
+uniform_cost_search,55,57,224,4689,4691,42590,17665,17667,154975
+
+
+set terminal png size 1600,1040 enhanced font "Helvetica,20"
+set output 'results_summary.png'
+
+red = "#FF0000"; green = "#00FF00"; blue = "#0000FF"; skyblue = "#87CEEB";
+set datafile separator ","
+set style data histogram
+set style histogram cluster gap 1
+set style fill solid
+set boxwidth 0.9
+set xtics rotate by 45 right
+set bmargin 8
+set grid ytics
+set logscale y 2.7182818284590452353602874713526624977572
+
+set title "Results per problem per search method"
+plot "uninformed_results_summary_ls.csv" using 2:xtic(1) title "num expansions prob 1" linecolor rgb red, \
+            '' using 3 title "num goal tests prob 1" linecolor rgb red, \
+            '' using 4 title "num new nodes prob 1" linecolor rgb red, \
+            '' using 5 title "num expansions prob 2" linecolor rgb blue, \
+            '' using 6 title "num goal tests prob 2" linecolor rgb blue, \
+            '' using 7 title "num new nodes prob 2" linecolor rgb blue, \
+            '' using 8 title "num expansions prob 3" linecolor rgb green, \
+            '' using 9 title "num goal tests prob 3" linecolor rgb green, \
+            '' using 10 title "num new nodes prob 3" linecolor rgb green
+
+
+
+set terminal png size 1600,1040 enhanced font "Helvetica,20"
+set output 'stepcount_p2.png'
+
+red = "#FF0000"; green = "#00FF00"; blue = "#0000FF"; skyblue = "#87CEEB";
+set datafile separator ","
+set style data histogram
+set style histogram cluster gap 1
+set style fill solid
+set boxwidth 0.9
+set xtics rotate by 45 right
+set bmargin 8
+set grid ytics
+
+
+set terminal png size 1600,1040 enhanced font "Helvetica,20"
+set output 'stepcount_p1.png'
+red = "#FF0000"; green = "#00FF00"; blue = "#0000FF"; skyblue = "#87CEEB";
+set datafile separator ","
+set style data histogram
+set style histogram cluster gap 1
+set style fill solid
+set boxwidth 0.9
+set xtics rotate by 45 right
+set bmargin 8
+set grid ytics
+set autoscale y
+plot "uninformed_metrics_summary.csv" using 2:xtic(1) title "num steps prob 1" linecolor rgb red
+
+set terminal png size 1600,1040 enhanced font "Helvetica,20"
+set output 'stepcount_p2.png'
+red = "#FF0000"; green = "#00FF00"; blue = "#0000FF"; skyblue = "#87CEEB";
+set datafile separator ","
+set style data histogram
+set style histogram cluster gap 1
+set style fill solid
+set boxwidth 0.9
+set xtics rotate by 45 right
+set bmargin 8
+set grid ytics
+set autoscale y
+plot "uninformed_metrics_summary.csv" using 4:xtic(1) title "num steps prob 2" linecolor rgb blue
+
+set terminal png size 1600,1040 enhanced font "Helvetica,20"
+set output 'stepcount_p3.png'
+red = "#FF0000"; green = "#00FF00"; blue = "#0000FF"; skyblue = "#87CEEB";
+set datafile separator ","
+set style data histogram
+set style histogram cluster gap 1
+set style fill solid
+set boxwidth 0.9
+set xtics rotate by 45 right
+set bmargin 8
+set grid ytics
+set autoscale y
+plot "uninformed_metrics_summary.csv" using 6:xtic(1) title "num steps prob 3" linecolor rgb green
+
+            '' using 5 title "num steps prob 2" linecolor rgb green, \
+            '' using 7 title "num steps prob  3" linecolor rgb blue

@@ -1,0 +1,6 @@
+algorithm p1_expansions,p1_num_steps,p1_runtime,p2_num_steps,p2_runtime,p3_num_steps,p3_runtime
+breadth first search,6,0.022721679,9,10.279568329,12,80.63102285
+breadth first tree search,6,0.680886603,0,0,0,0
+depth first graph search,12,0.006054218,575,2.71192227,596,2.942065304
+depth limited search,50,0.065070341,50,730.039250811,0,0
+uniform cost search,6,0.026322663,9,8.635357633,12,36.450933152
