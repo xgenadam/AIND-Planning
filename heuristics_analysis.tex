@@ -1,4 +1,4 @@
-\documentclass[11pt]{article}
+	\documentclass[11pt]{article}
 %Gummi|065|=)
 %\title{\textbf{Welcome to Gummi 0.6.5}}
 
@@ -26,29 +26,49 @@
 
 \newpage
 
-\section{Uninformed Search}
 
-%\begin{tabularx}{\linewidth}{llXX}\toprule %{|| c || c | c | c | c | c | c | c | c | c ||}\toprule
+\section{Uninformed Search Algorithms}
 
-    %\bfseries algorithm & \bfseries p1 expansions & \bfseries p1 goal tests & \bfseries p1 new nodes & \bfseries p2 expansions & \bfseries p2 goal tests & \bfseries p2 new nodes & \bfseries p3 expansions & \bfseries p3 goal tests % specify table head
-%    \textbf{A} & \textbf{B} & \textbf{C} & \textbf{D}\\\midrule
-%    \csvreader[late after line=\\\midrule,late after last line=\\\bottomrule]{uninformed_results_summary_ls.csv}
-    {}% use head of csv as column names
-%    {\csvcoli &
-    %\csvcolii & \csvcolii & \csvcolii &
-    %\csvcolii & \csvcolii & \csvcolii & 
-%    \csvcolii & \csvcolii & \csvcolii}% specify your coloumns here
-%\end{tabularx}
-\begin{figure}[h]
+\subsection{breadth first search}
+A search algorithm that searches the shallowest nodes in the tree first, excluding already explored states.
+If a solution exists this algorithm will find it, though it may not be optimal.
+
+\subsection{breadth first tree search}
+Similar to breadth first this allows for repeated states.	
+Not only could this solution create non optimum solutions there also exists the possibility of no solution being found as the algorithm falls into a cyclic search pattern dominating the search space, meaning that the problem space is not explorable with a feasible amount of computational power and/or storage space.
+
+\subsection{depth first graph search}
+Expanding the last expaned node until:
+\begin{itemize}
+	\item the goal is found
+	\item there are no nodes left in current branch
+	\item a previously explored state has been reached
+\end{itemize} 
+The limitation here on not exploring a previously explored space makes the algorithm efficient computationally but can prevent the algorithm from finding optimal solutions, it will not look for less expensive routes to the goal.
+
+\subsection{depth first limited search}
+Similar to depth first, but allowing for exploration of previously explored states. While this has the potential to find optimal solutions it may fall afoul of cycling through the same set of actions ad infinitum resulting in no solution being found even when one exists.
+
+\subsection{greedy best first graph search}
+Associating a cost with each action and expanding the action that is judged to be closest to the goal iff the state has not been explored already. This is reliant on the heuristic associated with the action being a good representation of closeness to the goal.
+
+\subsection{uniform cost search}
+Greedy best first graph search applying a uniform cost to all actions, effectively making a pseudo breadth first search, however the greatest difference is that uniform cost search does not stop immediately once the goal is found, instead examining other nodes at the goal found goal depth\cite{russell2005ai}, meaning it will produce the same result as breadth first but potentially less efficiently.\\
+
+\textbf{*Note:} an optimum solution here is defined as minimizing the number of actions, and assumes that all actions have the same cost.
+
+\section{Uninformed Search Results}
+
+\begin{figure}[H]
 %	\centering
 	\includegraphics[scale=0.32]{results_summary.png}
 	\caption{Results of each search method on each heuristic. The y axis is scaled to $log(e)$.
 			 It should be noted that problems 2 and 3 were not solved by breadth first within reasonable time. and that problem 3 was not solved by depth limited in reasonable time.}
-	\label{results}
+	\label{uninformed_results_summary}
 \end{figure}
 
-\begin{figure}
-	\begin{tabular}{|p{2cm}|| p{1.3cm} p{1.3cm} p{1.3cm} p{1.3cm} p{1.3cm} p{1.3cm} p{1.3cm}|} 
+\begin{figure}[H]
+	\begin{tabular}{|p{2cm}|| p{1.3cm} p{1.3cm} | p{1.3cm} p{1.3cm} | p{1.3cm} p{1.3cm} |} 
 		\hline
 		algorithm & p1 num steps & p1 runtime & p2 num steps & p2 runtime & p3 num steps & p3 runtime \\
 		\hline
@@ -61,19 +81,82 @@
 		\hline
 		depth limited search & 50 & 0.06507 & 50 & 730 & N/A & N/A  \\
 		\hline
-		uniform cost search & 6 & 0.0263 & 9 & 8.64 12 & 36.5  \\
+		uniform cost search & 6 & 0.0263 & 9 & 8.64 & 12 & 36.5  \\
 		\hline
 	\end{tabular}
-	
+	\caption{steps and runtime per problem, it is worth noting that runtime is an unreliable figure given that the system was under unrelated load during these tests.}
+	\label{uninformed_results_timestep}
 \end{figure}
 
 \subsection{Problem 1}
-The simplest of problems with least goals and constraints
+
+\textbf{Optimal solution:}
+\begin{enumerate}
+	\item Load(C2, P2, JFK)
+	\item Load(C1, P1, SFO)
+	\item Fly(P2, JFK, SFO)
+	\item Unload(C2, P2, SFO)
+	\item Fly(P1, SFO, JFK)
+	\item Unload(C1, P1, JFK)
+\end{enumerate}
+
+The simplest of problems with least goals and constraints, it is solvable within 6 steps.
+
+Given that planes start at the same locations as cargo, and there is one plane per unit of cargo, the problem can be solved in load, fly, unload for each piece of cargo.
+
+Given this simplicity how do the different search algorithms fair against this challenge?
+
+Figure \ref{uninformed_results_timestep} shows that breadth first, breadth first tree, and uniform cost searches find the optimal solution and that depth first graph search and depth first limited search find non optimal solutions but with reduced runtime, though it should be noted that in terms of number of expansion, goal tests and new nodes depth first graph search is most efficient. 
 
 \subsection{Problem 2}
 
+\textbf{Optimal solution:}
+\begin{enumerate}
+	\item Load(C2, P2, JFK)
+	\item Load(C1, P1, SFO)
+	\item Load(C3, P3, ATL)
+	\item Fly(P2, JFK, SFO)
+	\item Unload(C2, P2, SFO)
+	\item Fly(P1, SFO, JFK)
+	\item Unload(C1, P1, JFK)
+	\item Fly(P3, ATL, SFO)
+	\item Unload(C3, P3, SFO)
+\end{enumerate}
+
+In contrast to problem one this has an added layer of complexity, but is similar in that planes start at the same location as cargo, and no cargo is at its associated goal. Given this the optimal number of steps is 9, as produced by breadth first and uniform cost search. The additional variables meant that breadth first tree search was not practical for this problem, the algorithm likely fell into a cycle of repetition undoing its actions not completing the search. While breadth first and uniform cost searches provided the optimum answers they took more expansions, goal tests and new nodes than depth first graph search. 575 steps from depth first search is far from the correct answer of 9 provided by by uniform cost and breadth first.
+
+Depth limited search found a better answer than uniform cost, at 50 vs 575, however this was at the expense of many orders of magnitude more expansions, goal tests and new nodes. 
+
+Breadth first tree search was unable to find a solution to this problem within a reasonable amount of time.
+
+
 \subsection{Problem 3}
 
+\textbf{Optimal solution:}
+\begin{enumerate}
+	\item Load(C2, P2, JFK)
+	\item Load(C1, P1, SFO)
+	\item Fly(P2, JFK, ORD)
+	\item Load(C4, P2, ORD)
+	\item Fly(P1, SFO, ATL)
+	\item Load(C3, P1, ATL)
+	\item Fly(P1, ATL, JFK)
+	\item Unload(C1, P1, JFK)
+	\item Unload(C3, P1, JFK)
+	\item Fly(P2, ORD, SFO)
+	\item Unload(C2, P2, SFO)
+	\item Unload(C4, P2, SFO)
+\end{enumerate}
+
+A more complex problem in comparison to the previous two, 4 units of cargo and two planes. The optimum number of steps in this case is 12, requiring each plane to make additional trips to pick the cargo up and fly it to its destination.
+
+Both breadth first tree and depth limited searches were unable to find a solution within a reasonable amount of time, likely falling into cycles of finding repeated states and the search space being impractically large respectively.
+
+While the best performer in terms of time was depth first graph search, this produced the obviously non optimal number of steps as 596, more than an order of magnitude incorrect. In terms of which algorithm what better suited to this in terms of both getting the right answer most efficiently that would be breadth first. This is expected as uniform cost search is at its heart breadth first with additional work -- the same applied to all other problems.
+
+
+\bibliography{refs.bib}
+\bibliographystyle{plain}
 
 
 \end{document}
