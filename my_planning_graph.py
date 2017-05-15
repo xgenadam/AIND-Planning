@@ -300,7 +300,6 @@ class PlanningGraph():
         :return:
             adds A nodes to the current level in self.a_levels[level]
         """
-        # TODO add action A level to the planning graph as described in the Russell-Norvig text
         # 1. determine what actions to add and create those PgNode_a objects
         # 2. connect the nodes to the previous S literal level
         # for example, the A0 level will iterate through all possible actions for the problem and add a PgNode_a to a_levels[0]
@@ -321,7 +320,7 @@ class PlanningGraph():
                 action_node.parents.add(state_node)
                 state_node.children.add(action_node)
 
-        self.a_levels.append(set(action_nodes))
+        self.a_levels.append(action_nodes)
 
     def add_literal_level(self, level):
         """ add an S (literal) level to the Planning Graph
@@ -332,7 +331,6 @@ class PlanningGraph():
         :return:
             adds S nodes to the current level in self.s_levels[level]
         """
-        # TODO add literal S level to the planning graph as described in the Russell-Norvig text
         # 1. determine what literals to add
         # 2. connect the nodes
         # for example, every A node in the previous level has a list of S nodes in effnodes that represent the effect
@@ -341,11 +339,9 @@ class PlanningGraph():
         #   all of the new S nodes as children of all the A nodes that could produce them, and likewise add the A nodes to the
         #   parent sets of the S nodes
 
-        prev_action_nodes = self.a_levels[level - 1]
-
         effect_nodes_dict = {}
 
-        for action_node in prev_action_nodes:
+        for action_node in self.a_levels[level - 1]:
             for effect_node in action_node.effnodes:
                 # since nodes are hashable they can be keys to dictionaries
                 # effect_nodes dict has node act as a key that points to itself
@@ -356,6 +352,7 @@ class PlanningGraph():
                 effect_node_ = effect_nodes_dict.get(effect_node, None)
                 if effect_node_ is None:
                     effect_node_ = effect_node
+                    effect_nodes_dict[effect_node] = effect_node_
                 effect_node_.parents.add(action_node)
                 action_node.children.add(effect_node_)
 
@@ -434,7 +431,6 @@ class PlanningGraph():
         :param node_a2: PgNode_a
         :return: bool
         """
-        # TODO test for Interference between nodes
         a1_interferes_a2 = bool(set(node_a1.action.effect_rem) & set(node_a2.action.precond_pos)) or \
                            bool(set(node_a1.action.effect_add) & set(node_a2.action.precond_neg))
 
