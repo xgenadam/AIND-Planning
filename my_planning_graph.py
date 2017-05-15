@@ -528,12 +528,12 @@ class PlanningGraph():
             _level_sum = 0
             goal_found = False
             for level in self.s_levels:
-                _level_sum += 1
                 for state in level:
-                    if goal == state.symbol:
+                    if goal == state.symbol and state.is_pos is True:
                         level_sum += _level_sum
                         goal_found = True
                         break
+                _level_sum += 1
                 if goal_found is True:
                     break
 
