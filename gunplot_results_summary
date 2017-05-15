@@ -1,3 +1,8 @@
+cat ./problem_1_search_results.txt | grep -i search | awk {print "$7"}
+cat ./problem_1_search_results.txt | grep -i search | awk {print $7}
+cat ./problem_1_search_results_pg.txt | grep -i search | awk ' {print $7}'
+
+
 set term png
 
 set output "uninformed_results_summary.png"
@@ -125,3 +130,30 @@ plot "uninformed_metrics_summary.csv" using 6:xtic(1) title "num steps prob 3" l
 
             '' using 5 title "num steps prob 2" linecolor rgb green, \
             '' using 7 title "num steps prob  3" linecolor rgb blue
+
+
+
+set terminal png size 1600,1040 enhanced font "Helvetica,20"
+set output 'complete_results_summary.png'
+
+red = "#FF0000"; green = "#00FF00"; blue = "#0000FF"; skyblue = "#87CEEB";
+set datafile separator ","
+set style data histogram
+set style histogram cluster gap 1
+set style fill solid
+set boxwidth 0.9
+set xtics rotate by 45 right
+set bmargin 8
+set grid ytics
+set logscale y 2.7182818284590452353602874713526624977572
+
+set title "Results per problem per search method"
+plot "complete_metrics_summary.csv" using 2:xtic(1) title "num expansions prob 1" linecolor rgb red, \
+            '' using 3 title "num goal tests prob 1" linecolor rgb red, \
+            '' using 4 title "num new nodes prob 1" linecolor rgb red, \
+            '' using 5 title "num expansions prob 2" linecolor rgb blue, \
+            '' using 6 title "num goal tests prob 2" linecolor rgb blue, \
+            '' using 7 title "num new nodes prob 2" linecolor rgb blue, \
+            '' using 8 title "num expansions prob 3" linecolor rgb green, \
+            '' using 9 title "num goal tests prob 3" linecolor rgb green, \
+            '' using 10 title "num new nodes prob 3" linecolor rgb green

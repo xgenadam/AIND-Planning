@@ -1,0 +1,4 @@
+precond,p 1 expansion,P 1 goal tests,p 1 new nodes,p 2 expansion,p 2 goal tests,p 2 new nodes,p 3 expansion,p 3 goal tests,p 3 new nodes
+uniform cost search A*,55,57,224,4689,4691,42590,17665,17667,154975
+ignore preconditions A*,41,43,170,1310,1312,11979,4478,4480,39564
+level sum A*,11,13,50,74,76,720,229,231,2081
