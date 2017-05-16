@@ -25,16 +25,16 @@
 \newpage
 
 \section{Introduction}
-
+When tackling any problem a good plan is vital, in simple static situations a human can develop a static solution to the problem. Once a problem grows in complexity and size it is becomes neither efficient or simple for a human to develop a solution, especially if the problem is dynamic. In such situations there computational power in conjunction with the right algorithms can provide efficient elegant solutions. 
 
 \section{N Queens}
+One of the earliest planning problems, conceived as early as 1848\cite{russell2005ai}, the N Queens deals with an NxN chessboard where the objective is to maximize the number of Queens that can be placed on the board in non attacking positions. While superficially simple this is significant to the development of planning problems due to its depth and as such has been referenced by numerous publications \cite{russell2005ai, hu2003swarm, bell2009survey, singhcomparative} and has led to the overall growth of the field typically as a benchmark. A novel approach to the solution can be found in \cite{hu2003swarm} where a pseudo genetic algorithm was implemented in a fashion described by the author as a "particle swarm optmizer".
 
-
-\section{Traveling Salesman}
-
+\section{Dynamic Programming}
+When a problem domain is unfeasibly huge dynamic programming is a technique that can be applied whereby the problem can be broken down into a series of smaller problems that are individually easier to solve \cite{bertsekas1995dynamic}. In particular this is significant to the field, demonstrating practical use in the domain of bioinformatics where it has been used to classify genetic sequences \cite{snyder1993identification}.
 
 \section{A* search}
-
+This is one of the most significant algorithms in the development of the planning search, it is both powerful and widespread \cite{alshawi2012lifetime, russell2005ai, klein2003parsing}, applied to problems such as natural language processing \cite{klein2003parsing} and vehicle navigation \cite{bell2009hyperstar}. The range of applications and use cases for this algorithm have directly led to further research into improved implementations and has directly furthered the field, as such it is included here.
 
 \bibliography{refs.bib}
 \bibliographystyle{plain}
